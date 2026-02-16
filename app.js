@@ -264,3 +264,28 @@ const App = {
 };
 
 window.onload = () => App.init();
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // منع المتصفح من إظهار الشريط الافتراضي
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // يمكنك إظهار زر خاص بك هنا إذا أردت
+  console.log('التطبيق جاهز للتثبيت!');
+});
+
+// دالة لتشغيل التثبيت عند الضغط على أي زر
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('تم التثبيت بنجاح');
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+
