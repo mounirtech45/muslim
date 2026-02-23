@@ -54,8 +54,8 @@ self.addEventListener('push', function(event) {
 
     const options = {
         body: data.body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/2913/2913501.png',
-        badge: 'https://cdn-icons-png.flaticon.com/512/2913/2913501.png',
+        icon: 'icons/icon-512.png',
+        badge: 'icons/icon-512.png',
         vibrate: [200, 100, 200],
         data: { url: './index.html' }
     };
