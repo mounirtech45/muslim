@@ -1,4 +1,4 @@
-const CACHE_NAME = 'muslim-pro-v3';
+const CACHE_NAME = 'muslim-pro-v5';
 const assets = [
   './',
   './index.html',
@@ -9,32 +9,25 @@ const assets = [
   './dhikr.json',
   './radio.json',
   './reciters.json',
-  './icons/icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
   'https://www.islamcan.com/common/adhan/adhan1.mp3'
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(assets))
-  );
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(assets)));
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
 });
 
-// استقبال إشعار الصلاة وتشغيل الأذان
-self.addEventListener('push', function(event) {
+// تشغيل الأذان عبر الإشعارات
+self.addEventListener('push', event => {
     const options = {
-        body: 'حان الآن موعد الصلاة .. حي على الصلاة',
-        icon: 'icons/icon-512.png',
-        badge: 'icons/icon-512.png',
+        body: 'حي على الصلاة.. حي على الفلاح',
+        icon: 'https://cdn-icons-png.flaticon.com/512/2913/2913501.png',
         vibrate: [500, 100, 500],
-        tag: 'prayer-notification',
         requireInteraction: true
     };
-    event.waitUntil(self.registration.showNotification('نداء الصلاة', options));
+    event.waitUntil(self.registration.showNotification('موعد الصلاة', options));
 });
