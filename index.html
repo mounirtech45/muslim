@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>المسلم PRO - الإصدار الكامل</title>
+
+    <meta name="theme-color" content="#059669">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="المسلم PRO">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2913/2913501.png">
+    <link rel="manifest" href="manifest.json">
+
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -19,6 +27,21 @@
         .page { display: none; animation: fadeIn 0.3s ease; }
         .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* تنسيق زر تثبيت التطبيق PWA */
+        .install-banner {
+            display: none;
+            background: var(--accent);
+            color: white;
+            padding: 15px;
+            margin: 0 0 20px 0;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
 
         /* الواجهة الرئيسية والعداد */
         .hero-card { background: var(--card); border-radius: 20px; overflow: hidden; position: relative; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); height: 220px; }
@@ -81,6 +104,10 @@
 
     <main>
         <section id="p-home" class="page active-page">
+            <div id="install-pwa-btn" class="install-banner" onclick="installApp()">
+                <i class="fas fa-cloud-download-alt"></i> تثبيت التطبيق على الشاشة الرئيسية
+            </div>
+
             <div class="hero-card">
                 <img id="home-random-img" src="">
                 <div class="hero-content">
@@ -167,6 +194,30 @@
     <audio id="adan-player" src="https://www.islamcan.com/common/adhan/adhan1.mp3"></audio>
 
      <script src="app.js"></script>
-    <script src="notifications.js"></script>
+     <script src="notifications.js"></script>
+
+     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-pwa-btn').style.display = 'block';
+        });
+
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('install-pwa-btn').style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        }
+     </script>
 </body>
 </html>
