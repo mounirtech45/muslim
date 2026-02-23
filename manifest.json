@@ -11,7 +11,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2913/2913501.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -19,7 +19,7 @@
   ],
   "screenshots": [
     {
-      "src": "https://mounirtech45.github.io/muslim/icons/screenshot.png",
+      "src": "icons/screenshot.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
