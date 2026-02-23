@@ -1,11 +1,12 @@
 {
-  "id": "muslim-pro-mounir-2026",
+  "id": "muslim-pro-app-mounir",
   "name": "المسلم PRO",
   "short_name": "المسلم",
-  "description": "تطبيق إسلامي شامل للمصحف، الأذكار، ومواقيت الصلاة",
+  "description": "تطبيق إسلامي شامل للمصحف الشريف، الأذكار، ومواقيت الصلاة مع تنبيهات الأذان",
   "categories": ["books", "education", "utilities"],
   "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#059669",
   "theme_color": "#059669",
   "orientation": "portrait",
@@ -15,6 +16,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "screenshots": [
@@ -23,7 +30,19 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "الواجهة الرئيسية للمسلم PRO"
+      "label": "الواجهة الرئيسية لتطبيق المسلم PRO"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "أذكار الصباح",
+      "url": "./index.html#morning",
+      "icons": [{ "src": "icons/icon-512.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "مواقيت الصلاة",
+      "url": "./index.html#prayers",
+      "icons": [{ "src": "icons/icon-512.png", "sizes": "192x192" }]
     }
   ]
 }
