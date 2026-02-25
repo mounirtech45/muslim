@@ -17,56 +17,97 @@
     <style>
         :root { --accent: #059669; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
         [data-theme="dark"] { --bg: #020617; --card: #0f172a; --text: #f1f5f9; }
+        
         body { margin: 0; font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 75px; transition: 0.3s; overflow-x: hidden; touch-action: manipulation; }
+        
         header { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 800; font-size: 1.4rem; color: var(--accent); }
+        
         main { padding: 15px; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* تنسيق زر تثبيت التطبيق PWA */
+        .install-banner {
+            display: none;
+            background: var(--accent);
+            color: white;
+            padding: 15px;
+            margin: 0 0 20px 0;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* الواجهة الرئيسية والعداد */
         .hero-card { background: var(--card); border-radius: 20px; overflow: hidden; position: relative; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); height: 220px; }
-        #home-random-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
+        #home-random-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); transition: 0.5s; }
         .hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 90%; }
-        #local-time { font-size: 2.2rem; font-weight: 800; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        #next-prayer-timer { font-size: 0.9rem; opacity: 0.9; margin-top: 5px; background: rgba(0,0,0,0.2); display: inline-block; padding: 4px 12px; border-radius: 20px; backdrop-filter: blur(5px); }
-        .prayer-bar { display: flex; justify-content: space-around; background: var(--card); padding: 12px; border-radius: 18px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); font-size: 0.8rem; }
-        .prayer-item { text-align: center; flex: 1; position: relative; }
-        .prayer-item:not(:last-child)::after { content: ''; position: absolute; left: 0; top: 20%; height: 60%; width: 1px; background: rgba(0,0,0,0.05); }
-        .prayer-item span { display: block; color: #64748b; margin-bottom: 4px; font-weight: 700; }
-        .prayer-item .time { font-weight: 800; color: var(--text); }
-        .prayer-item.active-prayer { background: var(--accent); border-radius: 12px; padding: 5px 0; transform: scale(1.05); }
-        .prayer-item.active-prayer span, .prayer-item.active-prayer .time { color: white; }
+        #local-time { font-size: 2.8rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #next-prayer-timer { font-size: 1rem; background: rgba(0,0,0,0.4); padding: 6px 15px; border-radius: 20px; display: inline-block; margin-top: 8px; backdrop-filter: blur(5px); }
+
+        .prayer-bar { display: flex; justify-content: space-around; background: var(--card); padding: 12px; border-radius: 18px; margin-bottom: 25px; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .prayer-item { text-align: center; transition: 0.3s; }
+        .prayer-item.active { color: var(--accent); font-weight: 800; transform: scale(1.1); }
+
+        /* الشبكات */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
-        .card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid rgba(0,0,0,0.03); transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); cursor: pointer; }
+        .card { background: var(--card); padding: 15px; border-radius: 15px; cursor: pointer; text-align: center; border: 1px solid rgba(0,0,0,0.03); transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .card:active { transform: scale(0.95); }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.08); z-index: 1000; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
-        .nav-link { border: none; background: none; color: #94a3b8; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 5px; font-family: 'Tajawal'; font-weight: 700; }
-        .nav-link.active { color: var(--accent); }
-        .nav-link i { font-size: 1.3rem; }
+        .reciter-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--accent); padding: 2px; }
+
+        /* نظام الفيديو (TikTok Style) */
+        .video-container { height: calc(100vh - 150px); overflow-y: scroll; snap-type: y mandatory; border-radius: 20px; background: #000; scrollbar-width: none; }
+        .video-container::-webkit-scrollbar { display: none; }
+        .video-snap { snap-align: start; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
+        .video-snap video { width: 100%; height: 100%; object-fit: contain; }
+        .video-overlay { position: absolute; bottom: 40px; right: 20px; left: 20px; color: white; text-shadow: 0 2px 5px rgba(0,0,0,1); pointer-events: none; }
+
+        /* المشغل الصوتي المطور */
         .audio-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 5000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); visibility: hidden; }
         .audio-modal.active { bottom: 0; visibility: visible; }
-        /* ستايلات الـ Firebase */
-        .user-chip { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; background: rgba(5,150,105,0.1); padding: 5px 10px; border-radius: 20px; color: var(--accent); }
-        .user-chip img { width: 22px; height: 22px; border-radius: 50%; }
-        .fav-btn { border: none; background: none; font-size: 1.5rem; color: #ccc; cursor: pointer; }
-        .fav-btn.active { color: #ef4444; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .player-content { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; position: relative; }
+        .player-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(25px) brightness(0.4); opacity: 0.5; z-index: -1; }
+        .player-img { width: 260px; height: 260px; border-radius: 30px; object-fit: cover; box-shadow: 0 15px 40px rgba(0,0,0,0.4); margin-bottom: 25px; border: 4px solid rgba(255,255,255,0.1); }
+        #audio-progress { width: 100%; accent-color: var(--accent); height: 6px; cursor: pointer; border-radius: 10px; }
+
+        /* المصحف والأذكار */
+        .quran-view { text-align: right; line-height: 2.8; font-size: 1.5rem; font-family: 'Amiri'; padding: 20px; background: var(--card); border-radius: 15px; }
+        .ayah { cursor: pointer; transition: 0.2s; padding: 2px 5px; border-radius: 5px; display: inline; }
+        .ayah:hover { background: rgba(5, 150, 105, 0.15); color: var(--accent); }
+        .dhikr-card { background: var(--card); padding: 20px; border-radius: 18px; margin-bottom: 15px; text-align: right; border-right: 6px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .dhikr-count { display: inline-block; background: var(--accent); color: white; padding: 4px 15px; border-radius: 12px; font-size: 0.9rem; margin-top: 10px; }
+
+        /* التنقل السفلي */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.08); z-index: 1000; }
+        .nav-link { border: none; background: none; color: #94a3b8; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 5px; transition: 0.3s; }
+        .nav-link.active { color: var(--accent); font-weight: bold; transform: translateY(-3px); }
+        .nav-link i { font-size: 1.4rem; }
+
+        .tab-btn { background: var(--card); border: 1.5px solid var(--accent); color: var(--accent); padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: inherit; font-weight: bold; }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        .modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:6000; padding: 20px; backdrop-filter: blur(4px); }
     </style>
 </head>
 <body data-theme="light">
 
     <header>
-        <button id="back-nav" style="display:none; background:none; border:none; font-size: 1.2rem; color: var(--text);" onclick="App.goBack()"><i class="fas fa-arrow-right"></i></button>
+        <button id="back-nav" class="tab-btn" onclick="App.goBack()" style="display:none; border:none;"><i class="fas fa-arrow-right"></i></button>
         <div class="logo">المسلم PRO</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div id="auth-section">
-                <button onclick="App.login()" style="background:var(--accent); color:white; border:none; padding:5px 12px; border-radius:8px; font-family:'Tajawal'; cursor:pointer;">دخول</button>
-            </div>
-            <button onclick="App.toggleTheme()" style="background:none; border:none; color:var(--text); cursor:pointer;"><i id="theme-icon" class="fas fa-moon"></i></button>
-        </div>
+        <button onclick="App.toggleTheme()" class="tab-btn" style="border:none;"><i id="theme-icon" class="fas fa-moon"></i></button>
     </header>
 
     <main>
         <section id="p-home" class="page active-page">
+            <div id="install-pwa-btn" class="install-banner" onclick="installApp()">
+                <i class="fas fa-cloud-download-alt"></i> تثبيت التطبيق على الشاشة الرئيسية
+            </div>
+
             <div class="hero-card">
                 <img id="home-random-img" src="">
                 <div class="hero-content">
@@ -83,35 +124,28 @@
                 <div class="prayer-item" id="pt-Isha"><span>العشاء</span><div class="time">--:--</div></div>
             </div>
 
-            <div id="favorites-section" style="display:none; margin-bottom: 25px;">
-                <h3>المفضلات السحابية</h3>
-                <div id="favorites-grid" class="grid"></div>
-            </div>
-
-            <h3 id="install-pwa-btn" style="display:none; color:var(--accent); text-align:center; background:rgba(5,150,105,0.1); padding:10px; border-radius:10px; cursor:pointer;" onclick="installApp()">تثبيت التطبيق على جهازك</h3>
-
-            <h3>أشهر القراء</h3>
+            <h3 style="border-right: 4px solid var(--accent); padding-right: 10px;">أشهر القراء</h3>
             <div id="reciters-grid" class="grid"></div>
-            
-            <h3 style="margin-top:25px;">الإذاعات الإسلامية</h3>
+
+            <h3 style="margin-top:30px; border-right: 4px solid var(--accent); padding-right: 10px;">إذاعات القرآن مباشر</h3>
             <div id="radio-grid" class="grid"></div>
+        </section>
+
+        <section id="p-video" class="page">
+            <div id="tiktok-container" class="video-container"></div>
         </section>
 
         <section id="p-quran" class="page">
             <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button id="q-txt-btn" class="card active" style="flex:1; border: 2px solid var(--accent);" onclick="App.switchQuran('text')">مصحف نصي</button>
-                <button id="q-img-btn" class="card" style="flex:1;" onclick="App.switchQuran('image')">مصحف مصور</button>
+                <button id="q-txt-btn" class="tab-btn active" onclick="App.switchQuran('text')">مصحف نصي</button>
+                <button id="q-img-btn" class="tab-btn" onclick="App.switchQuran('image')">مصحف مصور</button>
             </div>
             <div id="surah-grid" class="grid"></div>
         </section>
 
-        <section id="p-video" class="page">
-            <div id="tiktok-container" style="height: calc(100vh - 150px); overflow-y: scroll; snap-type: y mandatory; border-radius: 20px;"></div>
-        </section>
-
         <section id="p-azkar" class="page">
             <div id="azkar-categories" class="grid"></div>
-            <div id="azkar-content"></div>
+            <div id="azkar-content" style="margin-top:15px;"></div>
         </section>
 
         <section id="p-viewer" class="page">
@@ -120,21 +154,32 @@
     </main>
 
     <div id="audio-player-modal" class="audio-modal">
-        <div style="padding:40px; text-align:center; height:100%; display:flex; flex-direction:column; align-items:center;">
-            <button onclick="App.closeAudioPlayer()" style="background:none; border:none; font-size:1.5rem; color:var(--text); align-self:flex-start;"><i class="fas fa-chevron-down"></i></button>
-            <img id="player-img" src="" style="width:250px; height:250px; border-radius:30px; object-fit:cover; margin-top:30px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
-            <h2 id="player-surah" style="margin-top:25px; font-family:'Amiri'; font-size:1.8rem;"></h2>
-            <p id="player-sheikh" style="opacity:0.7; margin-top:5px;"></p>
+        <div class="player-content">
+            <button onclick="App.closeAudioPlayer()" style="position:absolute; top:30px; right:30px; background:none; border:none; font-size:1.8rem; color:var(--text);"><i class="fas fa-chevron-down"></i></button>
+            <div id="player-bg" class="player-bg"></div>
+            <img id="player-img" src="" class="player-img">
+            <h2 id="player-surah" style="font-family:'Amiri'; color:var(--accent); margin:10px 0; font-size: 2rem;"></h2>
+            <p id="player-sheikh" style="font-size: 1.2rem; opacity: 0.9;"></p>
             
-            <div style="display:flex; align-items:center; gap:20px; margin-top:20px;">
-                <button id="fav-btn" class="fav-btn" onclick="App.toggleFav()"><i class="fas fa-heart"></i></button>
+            <div style="width:100%; max-width:450px; margin-top:30px;">
+                <input type="range" id="audio-progress" value="0">
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:8px; font-family: monospace;">
+                    <span id="current-time">00:00</span>
+                    <span id="duration-time">00:00</span>
+                </div>
+                <div style="display:flex; justify-content:center; gap:40px; margin-top:40px; align-items:center;">
+                    <button onclick="App.audio.currentTime-=10" style="background:none; border:none; font-size:1.8rem; color:var(--text);"><i class="fas fa-undo"></i></button>
+                    <button id="play-pause-btn" onclick="App.toggleAudio()" style="width:80px; height:80px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:2rem; box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);"><i class="fas fa-play"></i></button>
+                    <button onclick="App.audio.currentTime+=10" style="background:none; border:none; font-size:1.8rem; color:var(--text);"><i class="fas fa-redo"></i></button>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <input type="range" id="audio-progress" value="0" style="width:100%; margin-top:35px; accent-color:var(--accent);">
-            
-            <div style="display:flex; gap:30px; align-items:center; margin-top:30px;">
-                <button onclick="App.toggleAudio()" id="play-pause-btn" style="width:80px; height:80px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:2rem; cursor:pointer; box-shadow:0 10px 20px rgba(5,150,105,0.3);"><i class="fas fa-play"></i></button>
-            </div>
+    <div id="modal" class="modal" onclick="App.closeTafsir()">
+        <div style="background:var(--card); padding:30px; border-radius:20px; width:100%; max-width:550px; max-height:80vh; overflow-y:auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+            <h3 id="m-title" style="color:var(--accent); text-align:center; font-family:'Amiri'; font-size: 1.6rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px;"></h3>
+            <div id="m-body" style="line-height:2; text-align:right; font-size: 1.1rem; padding-top: 15px;"></div>
         </div>
     </div>
 
@@ -148,58 +193,31 @@
     <audio id="audio-player"></audio>
     <audio id="adan-player" src="https://www.islamcan.com/common/adhan/adhan1.mp3"></audio>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+     <script src="app.js"></script>
+     <script src="notifications.js"></script>
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAhwHYDhdFVy-j4WoGzrvUyF92Yb1j0mw0", 
-            authDomain: "muslim-c412b.firebaseapp.com", 
-            projectId: "muslim-c412b", 
-            storageBucket: "muslim-c412b.firebasestorage.app", 
-            messagingSenderId: "655204576628", 
-            appId: "1:655204576628:web:d6b61c316cf6edcd199021" 
-        };
+     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
 
-        const f_app = initializeApp(firebaseConfig);
-        const auth = getAuth(f_app);
-        const db = getFirestore(f_app);
-
-        window.App.login = async () => {
-            const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
-        };
-
-        window.App.toggleFav = async () => {
-            if (!auth.currentUser) return alert("يرجى تسجيل الدخول لحفظ المفضلات");
-            const item = App.currentPlaying;
-            if (!item) return;
-            const ref = doc(db, "users", auth.currentUser.uid);
-            const isFav = App.userData.favorites?.some(f => f.url === item.url);
-            
-            await updateDoc(ref, {
-                favorites: isFav ? arrayRemove(item) : arrayUnion(item)
-            });
-            App.syncData();
-        };
-
-        onAuthStateChanged(auth, async user => {
-            if (user) {
-                document.getElementById('auth-section').innerHTML = `<div class="user-chip"><img src="${user.photoURL}"> ${user.displayName.split(' ')[0]}</div>`;
-                App.syncData();
-            }
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-pwa-btn').style.display = 'block';
         });
 
-        window.App.syncData = async () => {
-            if (!auth.currentUser) return;
-            const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
-            if (!snap.exists()) await setDoc(doc(db, "users", auth.currentUser.uid), { favorites: [] });
-            App.userData = snap.data();
-            App.renderFavorites();
-        };
-    </script>
-    <script src="app.js"></script>
-    <script src="notifications.js"></script>
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('install-pwa-btn').style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        }
+     </script>
 </body>
 </html>
