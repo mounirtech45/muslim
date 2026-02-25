@@ -37,12 +37,12 @@
     {
       "name": "أذكار الصباح",
       "url": "./index.html#morning",
-      "icons": [{ "src": "icons/icon-512.png", "sizes": "192x192" }]
+      "icons": [{ "src": "icons/screenshot 1.png", "sizes": "192x192" }]
     },
     {
       "name": "مواقيت الصلاة",
       "url": "./index.html#prayers",
-      "icons": [{ "src": "icons/icon-512.png", "sizes": "192x192" }]
+      "icons": [{ "src": "icons/screenshot 2.png", "sizes": "192x192" }]
     }
   ]
 }
